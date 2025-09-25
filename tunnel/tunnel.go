@@ -421,12 +421,13 @@ func processUDP(queue chan C.PacketAdapter) {
 }
 
 func handleUDPConn(packet C.PacketAdapter) {
-	if !isHandle(packet.Metadata().Type) {
+	metadata := packet.Metadata()
+	if !isHandle(metadata.Type) {
 		packet.Drop()
+		log.Warnln("[Metadata] not handled: %#v", metadata)
 		return
 	}
 
-	metadata := packet.Metadata()
 	if !metadata.Valid() {
 		packet.Drop()
 		log.Warnln("[Metadata] not valid: %#v", metadata)
